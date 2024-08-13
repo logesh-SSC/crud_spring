@@ -2,44 +2,39 @@ package com.logesh.crud_spring.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.logesh.crud_spring.entity.Customer;
 import com.logesh.crud_spring.service.CustomerService;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true") 
 public class customerController {
-private final CustomerService customService;
+private final CustomerService customerService;
+
+@Autowired
+public customerController(CustomerService customerService) {
+    this.customerService = customerService;
+}
 
 @PostMapping("/customer")
 public Customer postCustomer(@RequestBody Customer customer)
 {
-    return customService.postCustomer(customer);
+    return customerService.postCustomer(customer);
 }
 
 @GetMapping("/customers")
 private List<Customer> getAllCustomer() {
-    return customService.getAllCustomer();
+    return customerService.getAllCustomer();
 }
 
 @GetMapping("/customer/{id}")
 public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-    Customer customer = customService.getCustomerById(id);
+    Customer customer = customerService.getCustomerById(id);
     if(customer == null)
     {
         return ResponseEntity.notFound().build();
@@ -52,7 +47,7 @@ public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
 
 @PutMapping("/customer/{id}")
 public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,@RequestBody Customer customer) {
-    Customer existingcustomer = customService.getCustomerById(id);
+    Customer existingcustomer = customerService.getCustomerById(id);
     if(existingcustomer == null)
     {
         return ResponseEntity.notFound().build();
@@ -62,21 +57,21 @@ public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,@RequestBod
         existingcustomer.setName(customer.getName());
         existingcustomer.setPosition(customer.getPosition());
         existingcustomer.setPhone(customer.getPhone());
-        Customer updatedCustomer = customService.updateCustomer(existingcustomer);
+        Customer updatedCustomer = customerService.updateCustomer(existingcustomer);
         return ResponseEntity.ok(updatedCustomer);
     }
 }
 
 @DeleteMapping("/customer/{id}")
 public ResponseEntity<?> deleteCustomer(@PathVariable Long id){
-    Customer existingCustomer = customService.getCustomerById(id);
+    Customer existingCustomer = customerService.getCustomerById(id);
     if(existingCustomer == null)
     {
         return ResponseEntity.notFound().build();
     }
     else
     {
-        customService.deleteCustomer(id);
+        customerService.deleteCustomer(id);
         return ResponseEntity.ok().build();
     }
 }

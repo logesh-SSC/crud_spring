@@ -2,17 +2,20 @@ package com.logesh.crud_spring.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.logesh.crud_spring.entity.Customer;
 import com.logesh.crud_spring.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository){
+        this.customerRepository = customerRepository;
+    }
     public Customer postCustomer(Customer customer)
     {
         return customerRepository.save(customer);
